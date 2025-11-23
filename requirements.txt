@@ -4,4 +4,6 @@ matplotlib
 scikit-learn
 nltk
 Flask
+torch
+tensorflow
 # -e .
