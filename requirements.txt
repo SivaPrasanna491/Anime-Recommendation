@@ -6,4 +6,5 @@ nltk
 Flask
 torch
 tensorflow
+beautifulsoup4
 # -e .

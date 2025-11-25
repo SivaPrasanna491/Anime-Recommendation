@@ -19,6 +19,7 @@ from src.utils import *
 @dataclass
 class DataTransformationConfig:
     preprocessor_file_path = os.path.join("artifacts", "preprocessor.pkl")
+    binarizer_file_path = os.path.join('artifacts', 'binarizer.pkl')
 
 class DataTransformation:
     def __init__(self):
@@ -47,7 +48,7 @@ class DataTransformation:
             one_hot_categorical_pipeline = Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
-                    ("encoder", OneHotEncoder())
+                    ("encoder", OneHotEncoder(handle_unknown='ignore'))
                 ]
             )
             
@@ -63,43 +64,51 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e, sys)
     
-    def initiate_data_transformation(self, train_path, test_path):
+    def initiate_data_transformation(self, train_path):
         try:
             train_data = pd.read_csv(train_path, encoding='latin')
-            test_data = pd.read_csv(test_path, encoding='latin')
             logging.info("Train and test datasets have been loaded successfully")
             
             preprocessor_obj = self.get_preprocessor_object()
             logging.info("Preprocessor object created successfully")
             
-            train_data['englishTitle'] = train_data['englishTitle'].fillna(train_data['title_userPreferred'])
-            test_data['englishTitle'] = test_data['englishTitle'].fillna(test_data['title_userPreferred'])
-            logging.info("All null values filled successfully")
+            # Generate embeddings for englishTitle
+            if('englishTitle' in train_data.columns):
+                train_data['englishTitle'] = train_data['englishTitle'].fillna(train_data['title_userPreferred'])
+                logging.info("All null values filled successfully")
+                train_embedding = generateEmbeddings(train_data)
             
+            # Binarize genre separately
             binarizer = MultiLabelBinarizer()
-            train_data['genre'] = binarizer.fit_transform(train_data['genre'])
-            test_data['genre'] = binarizer.transform(test_data['genre'])
+            genre_encoded = binarizer.fit_transform(train_data['genre'])
+            print(f"Genre encoded shape: {genre_encoded.shape}")
              
-            train_embedding, test_embedding = generateEmbeddings(train_data, test_data)
-            independent_train_data = train_data.drop(columns=["englishTitle", "theme"], axis=1)
-            independent_test_data = test_data.drop(columns=["englishTitle", "theme"], axis=1)
+            # Drop englishTitle, genre, title_userPreferred, and theme for preprocessing
+            # Only keep: rating, episodes, type
+            independent_train_data = train_data.drop(columns=["englishTitle", "genre", "title_userPreferred", "theme"], axis=1)
             logging.info("Independent features have been extracted successfully")
             
+            # Transform the remaining features (rating, episodes, type)
             independent_train_data = preprocessor_obj.fit_transform(independent_train_data)
-            independent_test_data = preprocessor_obj.transform(independent_test_data)
+            print(f"Preprocessor output shape: {independent_train_data.shape}")
+            print(f"Embedding shape: {train_embedding.shape}")
             
-            train_arr = np.concatenate((pd.DataFrame(train_embedding.numpy()), independent_train_data), axis=1)
-            test_arr = np.concatenate((pd.DataFrame(test_embedding.numpy()), independent_test_data), axis=1)
+            # Concatenate in order: [embedding, genre, other_features]
+            train_arr = np.concatenate((pd.DataFrame(train_embedding.numpy()), genre_encoded, independent_train_data), axis=1)
+            print(f"Final train_arr shape: {train_arr.shape}")
             logging.info("Feature engineering handled successfully")
             
             save_object(
                 file_path = self.transformation_config.preprocessor_file_path,
                 obj = preprocessor_obj
-            ) 
+            )
+            save_object(
+                file_path=self.transformation_config.binarizer_file_path,
+                obj = binarizer
+            )
             logging.info("Preprocessor object saved successfully")
             return(
-                train_arr,
-                test_arr,
+                pd.DataFrame(train_arr),
                 self.transformation_config.preprocessor_file_path
             )
         except Exception as e:
