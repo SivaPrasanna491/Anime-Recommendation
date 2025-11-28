@@ -20,7 +20,6 @@ parts/
 sdist/
 var/
 artifacts/
-# notebooks/anilist_anime_data_complete.csv
 wheels/
 share/python-wheels/
 *.egg-info/
