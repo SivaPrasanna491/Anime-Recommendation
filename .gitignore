@@ -20,7 +20,7 @@ parts/
 sdist/
 var/
 artifacts/
-notebooks/C:\Users\shiva\OneDrive\Documents\Anime Recommendation Modular\notebooks\anilist_anime_data_complete.csv
+notebooks/anilist_anime_data_complete.csv
 wheels/
 share/python-wheels/
 *.egg-info/
