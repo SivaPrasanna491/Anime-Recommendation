@@ -1,4 +1,4 @@
-from torch._inductor.scheduler import pick_loop_order
+import dotenv
 import os
 import sys
 import numpy as np
@@ -8,7 +8,15 @@ import nltk
 import torch
 import tensorflow
 import pickle
+import mysql.connector
+import requests
+import time
+import re
 
+from supabase import create_client, Client
+from bs4 import BeautifulSoup
+from mysql.connector import Error
+from datetime import datetime
 from torch.nn import Embedding
 from sklearn.preprocessing import MultiLabelBinarizer
 from tensorflow.keras.preprocessing.text import one_hot
@@ -95,11 +103,6 @@ def load_object(file_path):
         
     except Exception as e:
         raise CustomException(e, sys)
-
-import requests
-from bs4 import BeautifulSoup
-import time
-import re
 
 def get_anime_image_url(anime_title):
     """
@@ -257,3 +260,18 @@ def get_anime_image_url_hybrid(anime_title):
     # Fallback to MyAnimeList scraping
     print(f"AniList failed, trying MyAnimeList for: {anime_title}")
     return get_anime_image_url(anime_title)
+
+
+def getConnection():
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_API_KEY")
+    client = create_client(supabase_url=url, supabase_key=key)
+    return client
+    
+
+def getUser(client, email):
+    query = "select user_id from User where email=%s"
+    client.execute(query, (email, ))
+    result = client.fetchone()
+    return result[0]
+    

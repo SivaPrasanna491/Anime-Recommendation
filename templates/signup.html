@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Anime Finder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0d0a1f 0%,
+          #1a1033 50%,
+          #2d1b4e 100%
+        );
+        color: #e0d4ff;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glow {
+        position: fixed;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, #b14eff 0%, transparent 60%);
+        filter: blur(140px);
+        opacity: 0.4;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse 10s infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.3;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0.5;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+      }
+
+      .signup-container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 480px;
+        animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .signup-card {
+        background: rgba(15, 15, 30, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        border-radius: 30px;
+        padding: 3rem;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .signup-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+
+      .signup-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .signup-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      .signup-subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 400;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.6rem;
+        letter-spacing: 0.02em;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1.05rem;
+        background: rgba(15, 15, 30, 0.6);
+        border: 2px solid rgba(167, 139, 250, 0.3);
+        border-radius: 15px;
+        color: white;
+        outline: none;
+        transition: all 0.3s ease;
+        font-family: "Inter", sans-serif;
+      }
+
+      .input-field::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .input-field:focus {
+        border-color: #a78bfa;
+        background: rgba(15, 15, 30, 0.8);
+        box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.2);
+      }
+
+      .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .terms-checkbox input[type="checkbox"] {
+        margin-top: 0.3rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #a78bfa;
+      }
+
+      .terms-checkbox label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+      }
+
+      .terms-checkbox a {
+        color: #a78bfa;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .terms-checkbox a:hover {
+        color: #ec4899;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: "Inter", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          #a78bfa 0%,
+          #ec4899 50%,
+          #f59e0b 100%
+        );
+        background-size: 200% 200%;
+        color: white;
+        box-shadow: 0 20px 40px rgba(167, 139, 250, 0.4);
+        animation: gradientShift 3s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .btn-primary:hover::before {
+        left: 100%;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(236, 72, 153, 0.6);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 2rem 0;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.9rem;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(167, 139, 250, 0.2);
+      }
+
+      .divider::before {
+        margin-right: 1rem;
+      }
+
+      .divider::after {
+        margin-left: 1rem;
+      }
+
+      .login-link {
+        text-align: center;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .login-link a {
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .login-link a:hover {
+        color: #ec4899;
+      }
+
+      .back-home {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
+      .back-home a {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-home a:hover {
+        color: #a78bfa;
+      }
+
+      .password-strength {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .strength-bar {
+        height: 4px;
+        background: rgba(167, 139, 250, 0.2);
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      .strength-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 768px) {
+        .signup-card {
+          padding: 2rem;
+        }
+
+        .signup-title {
+          font-size: 2rem;
+        }
+
+        .signup-icon {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+
+    <div class="signup-container">
+      <div class="signup-card">
+        <div class="signup-header">
+          <div class="signup-icon">✨</div>
+          <h1 class="signup-title">Join Us</h1>
+          <p class="signup-subtitle">
+            Create an account to start discovering anime
+          </p>
+        </div>
+
+        <form action="/signup" method="POST" id="signupForm">
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="input-field"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="input-field"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="input-field"
+              placeholder="Create a strong password"
+              required
+              minlength="8"
+            />
+            <div class="strength-bar">
+              <div class="strength-bar-fill" id="strengthBar"></div>
+            </div>
+            <div class="password-strength" id="strengthText">
+              Password must be at least 8 characters
+            </div>
+          </div>
+
+          <div class="terms-checkbox">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms">
+              I agree to the <a href="#">Terms of Service</a> and
+              <a href="#">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <div class="login-link">
+          Already have an account? <a href="login.html">Login</a>
+        </div>
+
+        <div class="back-home">
+          <a href="/">← Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Password strength indicator
+      const passwordInput = document.getElementById("password");
+      const strengthBar = document.getElementById("strengthBar");
+      const strengthText = document.getElementById("strengthText");
+
+      passwordInput.addEventListener("input", function () {
+        const password = this.value;
+        let strength = 0;
+
+        if (password.length >= 8) strength += 25;
+        if (password.length >= 12) strength += 25;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+        if (/\d/.test(password)) strength += 15;
+        if (/[^a-zA-Z0-9]/.test(password)) strength += 10;
+
+        strengthBar.style.width = strength + "%";
+
+        if (strength < 40) {
+          strengthText.textContent = "Weak password";
+          strengthText.style.color = "#ef4444";
+        } else if (strength < 70) {
+          strengthText.textContent = "Medium password";
+          strengthText.style.color = "#f59e0b";
+        } else {
+          strengthText.textContent = "Strong password";
+          strengthText.style.color = "#10b981";
+        }
+      });
+
+      // Form validation
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (e) {
+          const password = document.getElementById("password").value;
+          const terms = document.getElementById("terms").checked;
+
+          if (password.length < 8) {
+            e.preventDefault();
+            alert("Password must be at least 8 characters long");
+            return;
+          }
+
+          if (!terms) {
+            e.preventDefault();
+            alert("Please accept the Terms of Service and Privacy Policy");
+            return;
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Anime Finder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: #0f0f1e;
+        background-image: radial-gradient(
+            at 0% 0%,
+            rgba(124, 58, 237, 0.15) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 50% 0%,
+            rgba(59, 130, 246, 0.15) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(236, 72, 153, 0.15) 0px,
+            transparent 50%
+          );
+        color: #e0d4ff;
+        font-family: "Inter", sans-serif;
+        padding: 40px 20px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .glow {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, #b14eff 0%, transparent 60%);
+        filter: blur(140px);
+        opacity: 0.4;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse 10s infinite alternate;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.3;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0.5;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .icon-container {
+        font-size: 6rem;
+        margin-bottom: 2rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .welcome-title {
+        font-size: 4rem;
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          #a78bfa 0%,
+          #ec4899 50%,
+          #f59e0b 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        0%,
+        100% {
+          filter: brightness(1) drop-shadow(0 0 30px rgba(167, 139, 250, 0.6));
+        }
+        50% {
+          filter: brightness(1.2) drop-shadow(0 0 50px rgba(236, 72, 153, 0.8));
+        }
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+      }
+
+      .message-box {
+        background: rgba(15, 15, 30, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(167, 139, 250, 0.15);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .btn-container {
+        margin-top: 3rem;
+      }
+
+      .btn {
+        padding: 1.3rem 4.5rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: "Inter", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          #a78bfa 0%,
+          #ec4899 50%,
+          #f59e0b 100%
+        );
+        background-size: 200% 200%;
+        color: white;
+        box-shadow: 0 20px 40px rgba(167, 139, 250, 0.4);
+        animation: gradientShift 3s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 30px 60px rgba(236, 72, 153, 0.6);
+      }
+
+      .decorative-line {
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #a78bfa,
+          #ec4899,
+          transparent
+        );
+        margin: 2rem auto;
+        border-radius: 2px;
+      }
+
+      /* Anime Recommendations Section */
+      .recommendations-section {
+        margin-top: 4rem;
+        width: 100%;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 2rem;
+      }
+
+      .anime-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+      }
+
+      .anime-card {
+        background: rgba(15, 15, 30, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeInUp 0.6s ease-out backwards;
+      }
+
+      .anime-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(236, 72, 153, 0.5);
+        box-shadow: 0 20px 40px rgba(167, 139, 250, 0.3);
+      }
+
+      .anime-image-container {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1a1033 0%, #2d1b4e 100%);
+      }
+
+      .anime-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+
+      .anime-card:hover .anime-image {
+        transform: scale(1.05);
+      }
+
+      .anime-card-content {
+        padding: 1rem;
+      }
+
+      .anime-card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        background: linear-gradient(90deg, #fff, #e0d4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      @media (max-width: 768px) {
+        .welcome-title {
+          font-size: 2.5rem;
+        }
+
+        .icon-container {
+          font-size: 4rem;
+        }
+
+        .subtitle {
+          font-size: 1.1rem;
+        }
+
+        .btn {
+          padding: 1rem 3rem;
+          font-size: 1.1rem;
+        }
+
+        .section-title {
+          font-size: 1.8rem;
+        }
+
+        .anime-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+
+    <div class="container">
+      {% if not animes or animes|length == 0 %}
+      <!-- No animes seen yet -->
+      <div class="icon-container">🎌</div>
+      <h1 class="welcome-title">No Animes Seen Yet</h1>
+      <div class="decorative-line"></div>
+      <p class="subtitle">Your anime journey starts here!</p>
+      <div class="message-box">
+        🌟 Discover thousands of amazing anime<br />
+        ⚡ Get personalized recommendations<br />
+        🎯 Find your next favorite series
+      </div>
+      {% else %}
+      <!-- User has seen animes - show recommendations -->
+      <div class="icon-container">✨</div>
+      <h1 class="welcome-title">Recommended For You</h1>
+      <div class="decorative-line"></div>
+      <p class="subtitle">Based on your viewing history</p>
+
+      <div class="recommendations-section">
+        <h2 class="section-title">🎬 You Might Like These</h2>
+        <div class="anime-grid">
+          {% for anime in animes %}
+          <div class="anime-card">
+            <div class="anime-image-container">
+              <img
+                src="{{ anime.image_url }}"
+                alt="{{ anime.anime_name }}"
+                class="anime-image"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/220x330/1a1033/a78bfa?text={{ anime.anime_name }}'"
+              />
+            </div>
+            <div class="anime-card-content">
+              <h3 class="anime-card-title">{{ anime.anime_name }}</h3>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="btn-container">
+        <a href="/findanime" class="btn btn-primary">🔍 Search More Animes</a>
+      </div>
+    </div>
+  </body>
+</html>

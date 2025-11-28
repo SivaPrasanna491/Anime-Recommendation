@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Finder - Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d0a1f 0%, #1a1033 50%, #2d1b4e 100%);
+            color: #e0d4ff;
+            font-family: 'Inter', sans-serif;
+            padding: 60px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .glow {
+            position: fixed;
+            width: 800px; 
+            height: 800px;
+            background: radial-gradient(circle, #b14eff 0%, transparent 60%);
+            filter: blur(140px);
+            opacity: 0.4;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 10s infinite alternate;
+            pointer-events: none;
+        }
+        
+        @keyframes pulse { 
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } 
+            100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); } 
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-container {
+            background: rgba(15, 15, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 30px;
+            padding: 3.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 3rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin: 2rem 0 1.2rem 0;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #a78bfa, #ec4899) 1;
+            display: inline-block;
+            letter-spacing: 0.02em;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.05rem;
+            background: rgba(15, 15, 30, 0.6);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 15px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .input-field:focus {
+            border-color: #a78bfa;
+            background: rgba(15, 15, 30, 0.8);
+            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.2);
+        }
+        
+        .multi-select-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-item {
+            position: relative;
+        }
+        
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: rgba(167, 139, 250, 0.08);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            color: white;
+        }
+        
+        .checkbox-item label:hover {
+            background: rgba(167, 139, 250, 0.15);
+            border-color: rgba(199, 125, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .checkbox-item input[type="checkbox"]:checked + label,
+        .checkbox-item input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #a78bfa, #ec4899);
+            border-color: #ec4899;
+            box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
+            transform: translateY(-2px);
+            font-weight: 600;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+        
+        .slider-container {
+            margin-bottom: 1rem;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(167, 139, 250, 0.2);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.3);
+            border: none;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .btn {
+            padding: 1.2rem 4rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #f59e0b 100%);
+            background-size: 200% 200%;
+            color: white;
+            box-shadow: 0 20px 40px rgba(167, 139, 250, 0.4);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 30px 60px rgba(236, 72, 153, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(15, 15, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            border-color: transparent;
+            transform: translateY(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .form-container { padding: 2rem; }
+            .form-title { font-size: 2rem; }
+            .two-column { grid-template-columns: 1fr; gap: 2rem; }
+            .button-container { flex-direction: column; }
+            .btn { padding: 1rem 2rem; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="form-title">Find Your Perfect Anime</div>
+            
+            <form action="/findanime" method="POST">
+                
+                <!-- Title Search -->
+                <p class="section-header">🔍 Search by Title</p>
+                <input type="text" name="englishTitle" class="input-field" placeholder="e.g., Naruto, One Piece...">
+                
+                <!-- Genre Selection -->
+                <p class="section-header">🎭 Select Genres</p>
+                <div class="multi-select-container">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre1" name="genre" value="Action">
+                        <label for="genre1">Action</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre2" name="genre" value="Adventure">
+                        <label for="genre2">Adventure</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre3" name="genre" value="Comedy">
+                        <label for="genre3">Comedy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre4" name="genre" value="Drama">
+                        <label for="genre4">Drama</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre5" name="genre" value="Fantasy">
+                        <label for="genre5">Fantasy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre6" name="genre" value="Horror">
+                        <label for="genre6">Horror</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre7" name="genre" value="Mystery">
+                        <label for="genre7">Mystery</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre8" name="genre" value="Romance">
+                        <label for="genre8">Romance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre9" name="genre" value="Sci-Fi">
+                        <label for="genre9">Sci-Fi</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre10" name="genre" value="Slice of Life">
+                        <label for="genre10">Slice of Life</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre11" name="genre" value="Sports">
+                        <label for="genre11">Sports</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre12" name="genre" value="Supernatural">
+                        <label for="genre12">Supernatural</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="genre13" name="genre" value="Thriller">
+                        <label for="genre13">Thriller</label>
+                    </div>
+                </div>
+                
+                <!-- Theme Selection -->
+                <p class="section-header">🎨 Select Themes</p>
+                <div class="multi-select-container">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme1" name="theme" value="School">
+                        <label for="theme1">School</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme2" name="theme" value="Military">
+                        <label for="theme2">Military</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme3" name="theme" value="Historical">
+                        <label for="theme3">Historical</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme4" name="theme" value="Mecha">
+                        <label for="theme4">Mecha</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme5" name="theme" value="Music">
+                        <label for="theme5">Music</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme6" name="theme" value="Psychological">
+                        <label for="theme6">Psychological</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme7" name="theme" value="Space">
+                        <label for="theme7">Space</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme8" name="theme" value="Vampire">
+                        <label for="theme8">Vampire</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme9" name="theme" value="Magic">
+                        <label for="theme9">Magic</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="theme10" name="theme" value="Martial Arts">
+                        <label for="theme10">Martial Arts</label>
+                    </div>
+                </div>
+                
+                <!-- Episodes and Rating -->
+                <div class="two-column">
+                    <div>
+                        <p class="section-header">📺 Number of Episodes</p>
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Episodes</span>
+                                <span id="episodesValue">24</span>
+                            </div>
+                            <input type="range" name="episodes" min="1" max="500" value="24" id="episodesSlider" oninput="document.getElementById('episodesValue').textContent = this.value">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="section-header">⭐ Minimum Rating</p>
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Rating</span>
+                                <span id="ratingValue">7.0</span>
+                            </div>
+                            <input type="range" name="rating" min="0" max="10" step="0.1" value="7.0" id="ratingSlider" oninput="document.getElementById('ratingValue').textContent = parseFloat(this.value).toFixed(1)">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Type Selection -->
+                <p class="section-header">📱 Anime Type</p>
+                <div class="multi-select-container">
+                    <div class="checkbox-item">
+                        <input type="radio" id="type1" name="type" value="TV">
+                        <label for="type1">TV</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="type2" name="type" value="MOVIE">
+                        <label for="type2">MOVIE</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="type3" name="type" value="OVA">
+                        <label for="type3">OVA</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="type4" name="type" value="ONA">
+                        <label for="type4">ONA</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="type5" name="type" value="SPECIAL">
+                        <label for="type5">SPECIAL</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="type6" name="type" value="MUSIC">
+                        <label for="type6">MUSIC</label>
+                    </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="button-container">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">← Back to Home</button>
+                    <button type="submit" class="btn btn-primary">🔍 Search Anime</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

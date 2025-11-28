@@ -322,7 +322,7 @@
         <div class="anime-card">
           <div
             class="anime-image-container"
-            onclick="trackView('{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}')"
+            onclick="trackView('{{ anime['englishTitle'] }}', {{ anime['id'] }})"
           >
             <img
               src="{{ anime['imageUrl'] }}"
@@ -335,7 +335,7 @@
           <div class="card-content">
             <h2
               class="anime-title"
-              onclick="trackView('{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}')"
+              onclick="trackView('{{ anime['englishTitle'] }}', {{ anime['id'] }})"
             >
               {{ anime['englishTitle'] }}
             </h2>
@@ -362,31 +362,31 @@
                 <span
                   class="star"
                   data-rating="1"
-                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}', 1, {{ loop.index }})"
+                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, 1, {{ loop.index }})"
                   >⭐</span
                 >
                 <span
                   class="star"
                   data-rating="2"
-                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}', 2, {{ loop.index }})"
+                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, 2, {{ loop.index }})"
                   >⭐</span
                 >
                 <span
                   class="star"
                   data-rating="3"
-                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}', 3, {{ loop.index }})"
+                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, 3, {{ loop.index }})"
                   >⭐</span
                 >
                 <span
                   class="star"
                   data-rating="4"
-                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}', 4, {{ loop.index }})"
+                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, 4, {{ loop.index }})"
                   >⭐</span
                 >
                 <span
                   class="star"
                   data-rating="5"
-                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, '{{ anime['genre'] }}', 5, {{ loop.index }})"
+                  onclick="rateAnime(event, '{{ anime['englishTitle'] }}', {{ anime['id'] }}, 5, {{ loop.index }})"
                   >⭐</span
                 >
               </div>
@@ -404,9 +404,11 @@
 
     <script>
       // Track when user clicks on anime image or title
-      function trackView(animeTitle, animeId, animeGenre) {
+      function trackView(animeTitle, animeId) {
         fetch(
-          `/view?anime_title=${encodeURIComponent(animeTitle)}&anime_id=${animeId}&anime_genre=${encodeURIComponent(animeGenre)}`
+          `/view?anime_title=${encodeURIComponent(
+            animeTitle
+          )}&anime_id=${animeId}`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -418,12 +420,14 @@
       }
 
       // Track when user rates anime
-      function rateAnime(event, animeTitle, animeId, animeGenre, rating, cardIndex) {
+      function rateAnime(event, animeTitle, animeId, rating, cardIndex) {
         event.stopPropagation(); // Prevent triggering card click
 
         // Send rating to backend
         fetch(
-          `/rating?anime_title=${encodeURIComponent(animeTitle)}&anime_id=${animeId}&anime_genre=${encodeURIComponent(animeGenre)}&rating=${rating}`
+          `/rating?anime_title=${encodeURIComponent(
+            animeTitle
+          )}&anime_id=${animeId}&rating=${rating}`
         )
           .then((response) => response.json())
           .then((data) => {
