@@ -30,20 +30,7 @@ class DataIngestion:
             df = pd.read_csv(file_path, encoding='latin')
             logging.info("Dataset loaded successfully")
             os.makedirs(os.path.dirname(self.ingestion_config.raw_path), exist_ok=True)
-            
-            df = pd.DataFrame({
-                "id": df['id'],
-                "englishTitle": df['title_english'],
-                "title_userPreferred": df['title_userPreferred'],
-                "type": df['format'],
-                "genre": df['genres'],
-                "theme": df['tags'],
-                "type": df['format'],
-                "episodes": df['episodes'],
-                "rating": df['averageScore'] 
-            })
             logging.info("Data ingestion initialized successfully")
-            df.to_csv(self.ingestion_config.raw_path, index=False, header=True)
             logging.info("Datasets loaded and stored successfully")
             
             return(
@@ -55,7 +42,7 @@ class DataIngestion:
 
 if __name__=="__main__":
     obj = DataIngestion()
-    train_path = obj.initialize_data_ingestion(r'C:\Users\shiva\OneDrive\Documents\Anime Recommendation Modular\notebooks\anilist_anime_data_complete.csv')
+    train_path = obj.initialize_data_ingestion(r'notebooks\Final Data.csv')
     
     transformation_obj = DataTransformation()
     train_arr, file_path = transformation_obj.initiate_data_transformation(train_path)
